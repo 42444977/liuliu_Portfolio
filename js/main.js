@@ -1,0 +1,87 @@
+/* 讀取 js/works.js 的設定,渲染整個網站。一般情況不需要改這個檔案。 */
+
+/* ---- 套用網站名稱 ---- */
+document.title = SITE.name + "｜作品集";
+document.getElementById("siteName").textContent = SITE.name;
+document.getElementById("siteSubtitle").textContent = SITE.subtitle;
+document.getElementById("footerText").textContent =
+  "© " + new Date().getFullYear() + " " + SITE.name;
+
+/* ---- 關於作者 ---- */
+const aboutEl = document.getElementById("aboutText");
+SITE.about.forEach(function (line) {
+  const p = document.createElement("p");
+  p.textContent = line;
+  aboutEl.appendChild(p);
+});
+
+/* ---- 作品牆 ---- */
+const gallery = document.getElementById("works");
+
+WORKS.forEach(function (w, i) {
+  const btn = document.createElement("button");
+  btn.className = "work";
+  btn.setAttribute("aria-label", "放大檢視:" + w.title);
+
+  const fig = document.createElement("figure");
+  const img = document.createElement("img");
+  img.src = w.src;
+  img.alt = w.title;
+  img.loading = "lazy";
+
+  const cap = document.createElement("figcaption");
+  cap.textContent = w.title;
+
+  fig.appendChild(img);
+  fig.appendChild(cap);
+  btn.appendChild(fig);
+  btn.addEventListener("click", function () { openLightbox(i); });
+  gallery.appendChild(btn);
+});
+
+/* ---- 燈箱 ---- */
+const lightbox = document.getElementById("lightbox");
+const lbImage = document.getElementById("lbImage");
+const lbCaption = document.getElementById("lbCaption");
+let current = 0;
+
+function openLightbox(i) {
+  current = i;
+  render();
+  lightbox.classList.add("open");
+  lightbox.setAttribute("aria-hidden", "false");
+  document.body.style.overflow = "hidden";
+}
+
+function closeLightbox() {
+  lightbox.classList.remove("open");
+  lightbox.setAttribute("aria-hidden", "true");
+  document.body.style.overflow = "";
+}
+
+function render() {
+  const w = WORKS[current];
+  lbImage.src = w.src;
+  lbImage.alt = w.title;
+  lbCaption.textContent = w.title + (w.note ? "　·　" + w.note : "");
+}
+
+function step(dir) {
+  current = (current + dir + WORKS.length) % WORKS.length;
+  render();
+}
+
+document.getElementById("lbClose").addEventListener("click", closeLightbox);
+document.getElementById("lbPrev").addEventListener("click", function () { step(-1); });
+document.getElementById("lbNext").addEventListener("click", function () { step(1); });
+
+lightbox.addEventListener("click", function (e) {
+  if (e.target === lightbox) closeLightbox();
+});
+
+document.addEventListener("keydown", function (e) {
+  if (!lightbox.classList.contains("open")) return;
+  if (e.key === "Escape") closeLightbox();
+  if (e.key === "ArrowLeft") step(-1);
+  if (e.key === "ArrowRight") step(1);
+});
