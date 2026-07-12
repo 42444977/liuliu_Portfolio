@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>作品集</title>
+  <meta name="description" content="繪畫作品集">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <h1 class="site-name" id="siteName">Portfolio</h1>
+    <p class="site-subtitle" id="siteSubtitle">Illustration Portfolio</p>
+    <nav class="site-nav">
+      <a href="#works">作品</a>
+      <a href="#about">關於</a>
+    </nav>
+  </header>
+
+  <main>
+    <section id="works" class="gallery" aria-label="作品牆">
+      <!-- 作品由 js/works.js + js/main.js 自動載入 -->
+    </section>
+
+    <section id="about" class="about">
+      <h2 class="section-title">關於作者</h2>
+      <div class="about-body" id="aboutText">
+        <!-- 自介文字在 js/works.js 修改 -->
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p id="footerText"></p>
+  </footer>
+
+  <!-- 燈箱 -->
+  <div class="lightbox" id="lightbox" aria-hidden="true">
+    <button class="lb-close" id="lbClose" aria-label="關閉">&times;</button>
+    <button class="lb-prev" id="lbPrev" aria-label="上一張">&#8249;</button>
+    <figure class="lb-figure">
+      <img id="lbImage" src="" alt="">
+      <figcaption id="lbCaption"></figcaption>
+    </figure>
+    <button class="lb-next" id="lbNext" aria-label="下一張">&#8250;</button>
+  </div>
+
+  <script src="js/works.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

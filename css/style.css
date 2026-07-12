@@ -1,0 +1,205 @@
+/* ============ 基礎 ============ */
+:root {
+  --ink: #1a1a1a;
+  --gray: #8a8a8a;
+  --line: #ececec;
+  --bg: #ffffff;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Noto Sans TC", sans-serif;
+  font-weight: 300;
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ============ 頁首 ============ */
+.site-header {
+  text-align: center;
+  padding: 110px 24px 70px;
+}
+
+.site-name {
+  font-family: "Cormorant Garamond", "Noto Sans TC", serif;
+  font-size: clamp(2.2rem, 6vw, 3.4rem);
+  font-weight: 400;
+  letter-spacing: 0.28em;
+  text-indent: 0.28em; /* 抵銷最後一字的字距,讓標題視覺置中 */
+}
+
+.site-subtitle {
+  margin-top: 10px;
+  color: var(--gray);
+  font-size: 0.82rem;
+  letter-spacing: 0.34em;
+  text-indent: 0.34em;
+  text-transform: uppercase;
+}
+
+.site-nav {
+  margin-top: 44px;
+  display: flex;
+  justify-content: center;
+  gap: 48px;
+}
+
+.site-nav a {
+  color: var(--ink);
+  text-decoration: none;
+  font-size: 0.9rem;
+  letter-spacing: 0.24em;
+  padding-bottom: 4px;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.3s;
+}
+
+.site-nav a:hover { border-color: var(--ink); }
+
+/* ============ 作品牆(瀑布流)============ */
+.gallery {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 20px 24px 40px;
+  column-count: 3;
+  column-gap: 28px;
+}
+
+@media (max-width: 900px) { .gallery { column-count: 2; } }
+@media (max-width: 560px) { .gallery { column-count: 1; } }
+
+.work {
+  break-inside: avoid;
+  margin-bottom: 28px;
+  cursor: zoom-in;
+  border: none;
+  background: none;
+  padding: 0;
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+}
+
+.work img {
+  width: 100%;
+  display: block;
+  transition: opacity 0.35s;
+}
+
+.work:hover img { opacity: 0.88; }
+
+.work figcaption {
+  margin-top: 8px;
+  font-size: 0.8rem;
+  color: var(--gray);
+  letter-spacing: 0.12em;
+}
+
+/* ============ 關於 ============ */
+.about {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 90px 24px 110px;
+  text-align: center;
+}
+
+.section-title {
+  font-size: 1rem;
+  font-weight: 400;
+  letter-spacing: 0.4em;
+  text-indent: 0.4em;
+  margin-bottom: 36px;
+  position: relative;
+}
+
+.section-title::after {
+  content: "";
+  display: block;
+  width: 32px;
+  height: 1px;
+  background: var(--ink);
+  margin: 18px auto 0;
+}
+
+.about-body p {
+  color: #555;
+  font-size: 0.92rem;
+  margin-bottom: 1em;
+}
+
+/* ============ 頁尾 ============ */
+.site-footer {
+  border-top: 1px solid var(--line);
+  text-align: center;
+  padding: 34px 24px;
+  color: var(--gray);
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+}
+
+/* ============ 燈箱 ============ */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.96);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.lightbox.open { display: flex; }
+
+.lb-figure {
+  max-width: min(88vw, 980px);
+  max-height: 86vh;
+  text-align: center;
+}
+
+.lb-figure img {
+  max-width: 100%;
+  max-height: 78vh;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.12);
+}
+
+.lb-figure figcaption {
+  margin-top: 14px;
+  font-size: 0.85rem;
+  color: var(--gray);
+  letter-spacing: 0.14em;
+}
+
+.lightbox button {
+  position: absolute;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--ink);
+  font-family: inherit;
+  line-height: 1;
+  padding: 12px;
+  transition: opacity 0.25s;
+}
+
+.lightbox button:hover { opacity: 0.5; }
+
+.lb-close { top: 22px; right: 28px; font-size: 2rem; font-weight: 300; }
+.lb-prev, .lb-next {
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 2.6rem;
+  font-weight: 300;
+}
+.lb-prev { left: 18px; }
+.lb-next { right: 18px; }
+
+@media (max-width: 560px) {
+  .lb-prev { left: 4px; }
+  .lb-next { right: 4px; }
+}
