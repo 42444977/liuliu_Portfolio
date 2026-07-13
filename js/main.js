@@ -28,26 +28,36 @@ function useThumbWithFallback(img, src) {
   };
 }
 
-/* ---- 背景預載原圖:縮圖捲動到畫面附近時,悄悄把原圖抓進瀏覽器快取,
-   等使用者真的點下去時燈箱就能直接秒開清晰圖 ---- */
-const preloadedSrcs = new Set();
+/* ---- 背景預載原圖:頁面(縮圖)載完後,依作品順序逐張把原圖抓進快取,
+   點開燈箱時若原圖已載好就直接顯示清晰圖,完全不用等 ---- */
+const preloadCache = new Map(); // src -> Image
 function preloadFull(src) {
-  if (preloadedSrcs.has(src)) return;
-  preloadedSrcs.add(src);
-  const img = new Image();
-  img.fetchPriority = "low";
-  img.src = src;
+  let img = preloadCache.get(src);
+  if (!img) {
+    img = new Image();
+    img.src = src;
+    preloadCache.set(src, img);
+  }
+  return img;
 }
 
-const preloadObserver = "IntersectionObserver" in window
-  ? new IntersectionObserver(function (entries, obs) {
-      entries.forEach(function (entry) {
-        if (!entry.isIntersecting) return;
-        preloadFull(entry.target.dataset.fullSrc);
-        obs.unobserve(entry.target);
-      });
-    }, { rootMargin: "600px 0px" })
-  : null;
+function isFullReady(src) {
+  const img = preloadCache.get(src);
+  return !!(img && img.complete && img.naturalWidth > 0);
+}
+
+window.addEventListener("load", function () {
+  /* 一張載完再載下一張,避免同時搶頻寬 */
+  let queue = WORKS.map(function (w) { return w.src; });
+  (function next() {
+    const src = queue.shift();
+    if (!src) return;
+    const img = preloadFull(src);
+    if (img.complete) { next(); return; }
+    img.addEventListener("load", next);
+    img.addEventListener("error", next);
+  })();
+});
 
 /* ---- 作品牆 ---- */
 const gallery = document.getElementById("works");
@@ -70,11 +80,8 @@ WORKS.forEach(function (w, i) {
   fig.appendChild(img);
   fig.appendChild(cap);
   btn.appendChild(fig);
-  btn.dataset.fullSrc = w.src;
   btn.addEventListener("click", function () { openLightbox(i); });
   gallery.appendChild(btn);
-
-  if (preloadObserver) preloadObserver.observe(btn);
 });
 
 /* ---- 燈箱 ---- */
@@ -102,21 +109,25 @@ function render() {
   lbImage.alt = w.title;
   lbCaption.textContent = w.title + (w.note ? "　·　" + w.note : "");
 
-  /* 先顯示縮圖(通常已從作品牆快取),原圖載完再淡入替換 */
+  /* 原圖已在快取:直接顯示清晰圖,跳過縮圖與模糊過場 */
+  if (isFullReady(w.src)) {
+    lbImage.onerror = null;
+    lbImage.classList.remove("is-loading");
+    lbImage.src = w.src;
+    return;
+  }
+
+  /* 原圖還沒好:先顯示縮圖(通常已從作品牆快取),原圖載完再淡入替換 */
   lbImage.classList.add("is-loading");
   useThumbWithFallback(lbImage, w.src);
 
-  const fullImg = new Image();
-  fullImg.onload = function () {
+  const fullImg = preloadFull(w.src);
+  fullImg.addEventListener("load", function () {
     if (WORKS[current] !== w) return;
+    lbImage.onerror = null;
     lbImage.src = w.src;
     lbImage.classList.remove("is-loading");
-  };
-  fullImg.src = w.src;
-
-  /* 預載上一張/下一張,連續按 prev/next 也不用等 */
-  preloadFull(WORKS[(current + 1) % WORKS.length].src);
-  preloadFull(WORKS[(current - 1 + WORKS.length) % WORKS.length].src);
+  }, { once: true });
 }
 
 function step(dir) {
