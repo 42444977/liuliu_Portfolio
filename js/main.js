@@ -15,6 +15,19 @@ SITE.about.forEach(function (line) {
   aboutEl.appendChild(p);
 });
 
+/* ---- 圖片載入輔助:縮圖路徑 + 找不到縮圖時退回原圖 ---- */
+function thumbSrcOf(src) {
+  return src.replace("images/", "images/thumb/");
+}
+
+function useThumbWithFallback(img, src) {
+  img.src = thumbSrcOf(src);
+  img.onerror = function () {
+    img.onerror = null;
+    img.src = src;
+  };
+}
+
 /* ---- 作品牆 ---- */
 const gallery = document.getElementById("works");
 
@@ -25,9 +38,10 @@ WORKS.forEach(function (w, i) {
 
   const fig = document.createElement("figure");
   const img = document.createElement("img");
-  img.src = w.src;
+  useThumbWithFallback(img, w.src);
   img.alt = w.title;
   img.loading = "lazy";
+  img.decoding = "async";
 
   const cap = document.createElement("figcaption");
   cap.textContent = w.title;
@@ -61,9 +75,20 @@ function closeLightbox() {
 
 function render() {
   const w = WORKS[current];
-  lbImage.src = w.src;
   lbImage.alt = w.title;
   lbCaption.textContent = w.title + (w.note ? "　·　" + w.note : "");
+
+  /* 先顯示縮圖(通常已從作品牆快取),原圖載完再淡入替換 */
+  lbImage.classList.add("is-loading");
+  useThumbWithFallback(lbImage, w.src);
+
+  const fullImg = new Image();
+  fullImg.onload = function () {
+    if (WORKS[current] !== w) return;
+    lbImage.src = w.src;
+    lbImage.classList.remove("is-loading");
+  };
+  fullImg.src = w.src;
 }
 
 function step(dir) {

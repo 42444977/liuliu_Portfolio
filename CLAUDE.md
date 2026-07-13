@@ -15,6 +15,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `index.html` — 靜態外殼，內含空的掛載點（`#works`、`#aboutText`、`#lightbox`），由 `main.js` 在載入時填入內容。腳本依序載入：`works.js` 要在 `main.js` 之前，因為 `main.js` 在載入時會同步讀取全域變數 `SITE`/`WORKS`（沒有 modules/bundler）。
 - `css/style.css` — 所有樣式都由 `:root` 中集中定義的 CSS 自訂屬性驅動（`--ink`、`--gray`、`--line`、`--bg`）。作品牆是用 CSS 多欄（multi-column）做瀑布流排版（`column-count`，在 900px/560px 有響應式斷點），不是用 CSS grid 或 JS 排版。
 - `images/` — `works.js` 裡 `src` 路徑指向的作品圖檔，以及 favicon 的來源/衍生檔（`favicon.png`，從另一個 logo 素材裁切置中而成）。
+- `images/thumb/` — 對應原圖的縮圖版本（檔名相同，`ffmpeg -vf "scale=700:700:force_original_aspect_ratio=decrease" -q:v 4`）。作品牆與燈箱都先載入這個版本，`main.js` 的 `useThumbWithFallback` 找不到縮圖時會自動退回原圖。新增作品時建議也補一張縮圖，沒補也不會壞，只是那張圖沒有加速效果。
 
 ## 開發慣例
 
