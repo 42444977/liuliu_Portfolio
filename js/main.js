@@ -28,6 +28,27 @@ function useThumbWithFallback(img, src) {
   };
 }
 
+/* ---- 背景預載原圖:縮圖捲動到畫面附近時,悄悄把原圖抓進瀏覽器快取,
+   等使用者真的點下去時燈箱就能直接秒開清晰圖 ---- */
+const preloadedSrcs = new Set();
+function preloadFull(src) {
+  if (preloadedSrcs.has(src)) return;
+  preloadedSrcs.add(src);
+  const img = new Image();
+  img.fetchPriority = "low";
+  img.src = src;
+}
+
+const preloadObserver = "IntersectionObserver" in window
+  ? new IntersectionObserver(function (entries, obs) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        preloadFull(entry.target.dataset.fullSrc);
+        obs.unobserve(entry.target);
+      });
+    }, { rootMargin: "600px 0px" })
+  : null;
+
 /* ---- 作品牆 ---- */
 const gallery = document.getElementById("works");
 
@@ -49,8 +70,11 @@ WORKS.forEach(function (w, i) {
   fig.appendChild(img);
   fig.appendChild(cap);
   btn.appendChild(fig);
+  btn.dataset.fullSrc = w.src;
   btn.addEventListener("click", function () { openLightbox(i); });
   gallery.appendChild(btn);
+
+  if (preloadObserver) preloadObserver.observe(btn);
 });
 
 /* ---- 燈箱 ---- */
@@ -89,6 +113,10 @@ function render() {
     lbImage.classList.remove("is-loading");
   };
   fullImg.src = w.src;
+
+  /* 預載上一張/下一張,連續按 prev/next 也不用等 */
+  preloadFull(WORKS[(current + 1) % WORKS.length].src);
+  preloadFull(WORKS[(current - 1 + WORKS.length) % WORKS.length].src);
 }
 
 function step(dir) {
