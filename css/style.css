@@ -173,6 +173,11 @@ body {
   border-color: var(--ink);
 }
 
+/* 手機:改成釘在頁面頂端,隨捲動離開畫面,不會一直浮在作品上 */
+@media (max-width: 560px) {
+  .share-btn { position: absolute; }
+}
+
 /* ============ 燈箱 ============ */
 .lightbox {
   position: fixed;
