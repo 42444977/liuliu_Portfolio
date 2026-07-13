@@ -18,9 +18,9 @@ const SITE = {
    格式: { src: "images/檔名.jpg", title: "作品名稱", note: "備註(可省略)" }
    ============================================================ */
 const WORKS = [
-  { src: "images/稿件.jpg",    title: "稿件",     note: "" },
-  { src: "images/45564_0.jpg", title: "未命名 I",   note: "" },
-  { src: "images/45565_0.jpg", title: "未命名 II",  note: "" },
-  { src: "images/45566_0.jpg", title: "未命名 III", note: "" },
-  { src: "images/45567_0.jpg", title: "未命名 IV",  note: "" },
+  { src: "images/稿件.jpg",    title: "稿件 1",     note: "" },
+  { src: "images/45564_0.jpg", title: "臨摹 1",   note: "" },
+  { src: "images/45565_0.jpg", title: "作品 1",  note: "" },
+  { src: "images/45566_0.jpg", title: "臨摹 2", note: "" },
+  { src: "images/45567_0.jpg", title: "臨摹 3",  note: "" },
 ];
