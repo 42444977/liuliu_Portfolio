@@ -5,6 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>作品集</title>
   <meta name="description" content="繪畫作品集">
+  <!-- 分享預覽(Open Graph):爬蟲不會執行 JS,所以這裡是全站唯一
+       必須寫死筆名/圖片的地方。og:image 必須是完整網址;
+       想換預覽圖就改下面那行的圖檔名 -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="卯柳｜作品集">
+  <meta property="og:description" content="卯柳的繪畫作品集">
+  <meta property="og:url" content="https://42444977.github.io/liuliu_Portfolio/">
+  <meta property="og:image" content="https://42444977.github.io/liuliu_Portfolio/images/45565_0.jpg">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" type="image/png" href="images/favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,6 +21,8 @@
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+
+  <button class="share-btn" id="shareBtn" aria-label="分享此網站">分享</button>
 
   <header class="site-header">
     <h1 class="site-name" id="siteName">Portfolio</h1>
@@ -41,6 +52,7 @@
 
   <!-- 燈箱 -->
   <div class="lightbox" id="lightbox" aria-hidden="true">
+    <div class="lb-counter" id="lbCounter"></div>
     <button class="lb-close" id="lbClose" aria-label="關閉">&times;</button>
     <button class="lb-prev" id="lbPrev" aria-label="上一張">&#8249;</button>
     <figure class="lb-figure">

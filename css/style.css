@@ -61,20 +61,24 @@ body {
 
 .site-nav a:hover { border-color: var(--ink); }
 
-/* ============ 作品牆(瀑布流)============ */
+/* ============ 作品牆(瀑布流)============
+   欄位由 main.js 依視窗寬度動態分配(3/2/1 欄,斷點 900px/560px),
+   這裡只負責欄的外觀 */
 .gallery {
   max-width: 1080px;
   margin: 0 auto;
   padding: 20px 24px 40px;
-  column-count: 3;
-  column-gap: 28px;
+  display: flex;
+  gap: 28px;
+  align-items: flex-start;
 }
 
-@media (max-width: 900px) { .gallery { column-count: 2; } }
-@media (max-width: 560px) { .gallery { column-count: 1; } }
+.gallery-col {
+  flex: 1;
+  min-width: 0;
+}
 
 .work {
-  break-inside: avoid;
   margin-bottom: 28px;
   cursor: zoom-in;
   border: none;
@@ -89,10 +93,13 @@ body {
 .work img {
   width: 100%;
   display: block;
-  transition: opacity 0.35s;
+  opacity: 0;
+  transition: opacity 0.5s ease;
 }
 
-.work:hover img { opacity: 0.88; }
+.work img.is-loaded { opacity: 1; }
+
+.work:hover img.is-loaded { opacity: 0.88; }
 
 .work figcaption {
   margin-top: 8px;
@@ -143,18 +150,47 @@ body {
   letter-spacing: 0.18em;
 }
 
+/* ============ 分享按鈕 ============ */
+.share-btn {
+  position: fixed;
+  top: 18px;
+  right: 22px;
+  z-index: 90;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid var(--line);
+  color: var(--gray);
+  font-family: inherit;
+  font-size: 0.78rem;
+  letter-spacing: 0.18em;
+  text-indent: 0.18em;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: color 0.25s, border-color 0.25s;
+}
+
+.share-btn:hover {
+  color: var(--ink);
+  border-color: var(--ink);
+}
+
 /* ============ 燈箱 ============ */
 .lightbox {
   position: fixed;
   inset: 0;
   background: rgba(255, 255, 255, 0.96);
-  display: none;
+  display: flex;
   align-items: center;
   justify-content: center;
   z-index: 100;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.28s ease, visibility 0.28s;
 }
 
-.lightbox.open { display: flex; }
+.lightbox.open {
+  opacity: 1;
+  visibility: visible;
+}
 
 .lb-figure {
   max-width: min(88vw, 980px);
@@ -194,6 +230,15 @@ body {
 }
 
 .lightbox button:hover { opacity: 0.5; }
+
+.lb-counter {
+  position: absolute;
+  top: 30px;
+  left: 28px;
+  color: var(--gray);
+  font-size: 0.8rem;
+  letter-spacing: 0.22em;
+}
 
 .lb-close { top: 22px; right: 28px; font-size: 2rem; font-weight: 300; }
 .lb-prev, .lb-next {
