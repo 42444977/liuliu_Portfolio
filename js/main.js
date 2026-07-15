@@ -15,6 +15,32 @@ SITE.about.forEach(function (line) {
   aboutEl.appendChild(p);
 });
 
+/* ---- 聯絡方式 ---- */
+if (SITE.contact && SITE.contact.length) {
+  const list = document.createElement("ul");
+  list.className = "about-contact";
+  SITE.contact.forEach(function (c) {
+    const li = document.createElement("li");
+    const label = document.createElement("span");
+    label.className = "contact-label";
+    label.textContent = c.label;
+    li.appendChild(label);
+    let value;
+    if (c.href) {
+      value = document.createElement("a");
+      value.href = c.href;
+      value.target = "_blank";
+      value.rel = "noopener";
+    } else {
+      value = document.createElement("span");
+    }
+    value.textContent = c.value;
+    li.appendChild(value);
+    list.appendChild(li);
+  });
+  aboutEl.appendChild(list);
+}
+
 /* ---- 分享按鈕:手機用系統分享面板,桌機退回複製連結 ---- */
 const shareBtn = document.getElementById("shareBtn");
 shareBtn.addEventListener("click", function () {

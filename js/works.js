@@ -9,6 +9,11 @@ const SITE = {
   about: [
     "尼們好我是卯柳 我喜歡打遊戲吃餅乾 湊蟑螂衝擊！！",
   ],
+  /* 聯絡方式:有 href 會變成可點的連結,沒有就純文字 */
+  contact: [
+    { label: "IG",      value: "mao_liu_",    href: "https://www.instagram.com/mao_liu_" },
+    { label: "LINE ID", value: "11225200620" },
+  ],
 };
 
 /* ============================================================
@@ -18,9 +23,9 @@ const SITE = {
    格式: { src: "images/檔名.jpg", title: "作品名稱", note: "備註(可省略)" }
    ============================================================ */
 const WORKS = [
-  { src: "images/稿件.jpg",    title: "稿件 1",     note: "" },
-  { src: "images/45564_0.jpg", title: "臨摹 1",   note: "" },
-  { src: "images/45565_0.jpg", title: "作品 1",  note: "" },
-  { src: "images/45566_0.jpg", title: "臨摹 2", note: "" },
-  { src: "images/45567_0.jpg", title: "臨摹 3",  note: "" },
+  { src: "images/draft_1.jpg", title: "稿件_1",  note: "" },
+  { src: "images/work_1.jpg",  title: "作品_1",  note: "" },
+  { src: "images/copy_1.jpg",  title: "臨摹_1",  note: "" },
+  { src: "images/copy_2.jpg",  title: "臨摹_2",  note: "" },
+  { src: "images/copy_3.jpg",  title: "臨摹_3",  note: "" },
 ];

@@ -140,6 +140,30 @@ body {
   margin-bottom: 1em;
 }
 
+.about-contact {
+  list-style: none;
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 0.88rem;
+  letter-spacing: 0.08em;
+}
+
+.about-contact .contact-label {
+  color: var(--gray);
+  margin-right: 12px;
+}
+
+.about-contact a {
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid var(--line);
+  transition: border-color 0.3s;
+}
+
+.about-contact a:hover { border-color: var(--ink); }
+
 /* ============ 頁尾 ============ */
 .site-footer {
   border-top: 1px solid var(--line);
