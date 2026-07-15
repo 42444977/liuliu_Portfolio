@@ -61,25 +61,28 @@ body {
 
 .site-nav a:hover { border-color: var(--ink); }
 
-/* ============ 作品牆(瀑布流)============
-   欄位由 main.js 依視窗寬度動態分配(3/2/1 欄,斷點 900px/560px),
-   這裡只負責欄的外觀 */
+/* ============ 作品牆(等高格子)============
+   CSS grid 固定欄數(3/2/1 欄,斷點 900px/560px),每格 3:4 直式比例,
+   縮圖用 object-fit: cover 置中裁切,所以不同尺寸的圖也能對齊;
+   手機單欄空間夠,不裁切、顯示完整比例 */
 .gallery {
   max-width: 1080px;
   margin: 0 auto;
   padding: 20px 24px 40px;
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 28px;
-  align-items: flex-start;
 }
 
-.gallery-col {
-  flex: 1;
-  min-width: 0;
+@media (max-width: 900px) {
+  .gallery { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 560px) {
+  .gallery { grid-template-columns: 1fr; }
 }
 
 .work {
-  margin-bottom: 28px;
   cursor: zoom-in;
   border: none;
   background: none;
@@ -92,9 +95,15 @@ body {
 
 .work img {
   width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
   display: block;
   opacity: 0;
   transition: opacity 0.5s ease;
+}
+
+@media (max-width: 560px) {
+  .work img { aspect-ratio: auto; }
 }
 
 .work img.is-loaded { opacity: 1; }

@@ -98,66 +98,37 @@ window.addEventListener("load", function () {
   })();
 });
 
-/* ---- 作品牆:JS 分欄的瀑布流,作品順序由左至右逐列排 ----
-   (改用 JS 而不是 CSS multi-column,是因為 multi-column 會先填滿
-   整欄再換欄,作品一多順序就不符直覺) */
+/* ---- 作品牆:等高格子網格 ----
+   欄數與裁切都交給 CSS grid + aspect-ratio 處理,
+   這裡只負責把作品依序塞進 #works,不用管視窗寬度 */
 const gallery = document.getElementById("works");
-let galleryCols = 0;
 
-function colCountFor() {
-  if (window.innerWidth <= 560) return 1;
-  if (window.innerWidth <= 900) return 2;
-  return 3;
-}
+WORKS.forEach(function (w, i) {
+  const btn = document.createElement("button");
+  btn.className = "work";
+  btn.setAttribute("aria-label", "放大檢視:" + w.title);
 
-function buildGallery() {
-  const n = colCountFor();
-  if (n === galleryCols) return;
-  galleryCols = n;
+  const fig = document.createElement("figure");
+  const img = document.createElement("img");
+  useThumbWithFallback(img, w.src);
+  img.alt = w.title;
+  img.loading = "lazy";
+  img.decoding = "async";
 
-  gallery.innerHTML = "";
-  const cols = [];
-  for (let c = 0; c < n; c++) {
-    const col = document.createElement("div");
-    col.className = "gallery-col";
-    gallery.appendChild(col);
-    cols.push(col);
-  }
+  /* 載入完成才淡入 */
+  function markLoaded() { img.classList.add("is-loaded"); }
+  img.addEventListener("load", markLoaded);
+  img.addEventListener("error", markLoaded);
 
-  WORKS.forEach(function (w, i) {
-    const btn = document.createElement("button");
-    btn.className = "work";
-    btn.setAttribute("aria-label", "放大檢視:" + w.title);
+  const cap = document.createElement("figcaption");
+  cap.textContent = w.title;
 
-    const fig = document.createElement("figure");
-    const img = document.createElement("img");
-    useThumbWithFallback(img, w.src);
-    img.alt = w.title;
-    img.loading = "lazy";
-    img.decoding = "async";
-
-    /* 載入完成才淡入(重建版面時已快取的圖會直接顯示) */
-    function markLoaded() { img.classList.add("is-loaded"); }
-    if (img.complete && img.naturalWidth > 0) {
-      markLoaded();
-    } else {
-      img.addEventListener("load", markLoaded);
-      img.addEventListener("error", markLoaded);
-    }
-
-    const cap = document.createElement("figcaption");
-    cap.textContent = w.title;
-
-    fig.appendChild(img);
-    fig.appendChild(cap);
-    btn.appendChild(fig);
-    btn.addEventListener("click", function () { openLightbox(i); });
-    cols[i % n].appendChild(btn);
-  });
-}
-
-buildGallery();
-window.addEventListener("resize", buildGallery);
+  fig.appendChild(img);
+  fig.appendChild(cap);
+  btn.appendChild(fig);
+  btn.addEventListener("click", function () { openLightbox(i); });
+  gallery.appendChild(btn);
+});
 
 /* ---- 燈箱 ---- */
 const lightbox = document.getElementById("lightbox");
